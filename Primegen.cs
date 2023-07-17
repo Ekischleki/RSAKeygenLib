@@ -203,6 +203,9 @@ namespace RSAKeygenLib
             max++;
             int lenght = (Convert.ToString(max) ?? throw new Exception("Convert.ToString(max) returned null.")).Length - (Convert.ToString(min) ?? throw new Exception("Convert.ToString(min) returned null.")).Length + 10;
             BigInteger result = RSAKeygenLib.GenPrimes.GetRandomLenghtBigIntiger(lenght);
+            if (min == max) // Devide by 0 error else
+                return min;
+
             return (result % (max - min)) + min;
 
         }

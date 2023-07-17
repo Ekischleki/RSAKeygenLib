@@ -10,22 +10,29 @@ namespace RSAKeygenLib
         {
             
             List<BigInteger> primes = GenPrimes.GenLargePrimes(2, Environment.ProcessorCount, lenght);
-            PublicPrivateKeypair result = GenKeypairWithPrimes(primes[0], primes[1]);
-            if (result.PrivateKey.CryptUsingKeypair(result.PublicKey.CryptUsingKeypair(1)) != 1) throw new Exception("Keypair wasn't generated successfully.");
+            PublicPrivateKeypair result = GenerateRSAKeypair(primes[0], primes[1]);
+            if (result.PrivateKey.CryptUsingKeypair(result.PublicKey.CryptUsingKeypair(2)) != 2) throw new Exception("Keypair wasn't generated successfully.");
             return result;
         }
 
-        private static PublicPrivateKeypair GenKeypairWithPrimes(BigInteger prime1, BigInteger prime2)
+        public static PublicPrivateKeypair GenerateRSAKeypair(BigInteger prime1, BigInteger prime2)
         {
             BigInteger n = prime1 * prime2;
             BigInteger tOfN = (prime1 - 1) * (prime2 - 1);
             BigInteger e = RandomBigInteger.GetRandom(2, tOfN - 1);
             if (e < 0)
                 Console.WriteLine($"e should be between 2 and {tOfN - 1}, but it is\n{e}");
+            
             while (FindGCF(e, tOfN) != 1)
             {
-                //e = ((e - 1) % (tOfN - 1)) + 2;
+
+
                 e++;
+                if (e > tOfN - 1)
+                    e = 2;
+
+
+
                 if (e > tOfN - 1)
                 {
                     e = RandomBigInteger.GetRandom(2, tOfN - 1);
@@ -48,7 +55,6 @@ namespace RSAKeygenLib
 
         private static BigInteger FindEGCD(BigInteger e, BigInteger tOfN) //Extended greatest common divisor algorithm:https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm
         {
-            //Currently kinda broken...
             BigInteger o1 = tOfN;
             BigInteger o2 = e;
             BigInteger o3;
