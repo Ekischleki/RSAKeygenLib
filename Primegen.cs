@@ -31,7 +31,7 @@ namespace RSAKeygenLib
             }
             return true; //Could still be no prime
         }
-        private static bool IsPrime(BigInteger number)
+        private static bool IsPrime(BigInteger number, int maxIterations)
         {
             //Rabin miller algorithm for evaluating primes
             if (number == 2)
@@ -53,7 +53,7 @@ namespace RSAKeygenLib
                 s /= 2;
                 t += 1;
             }
-            for (long iteration = 0; iteration < 25; iteration++) // Would be cool if it could run in paralell
+            for (long iteration = 0; iteration < maxIterations; iteration++) // Would be cool if it could run in paralell
             {
                 BigInteger a = RandomBigInteger.GetRandom(2, number - 1);
                 // generate a random number to check between 2 and number -1
@@ -81,7 +81,7 @@ namespace RSAKeygenLib
         }
 
         private static readonly List<BigInteger> generatedLargePrimes = new ();
-        public static List<BigInteger> GenLargePrimes(int numOfPrimes, int threads, int bytelnght = 256)
+        public static List<BigInteger> GenLargePrimes(int numOfPrimes, int threads, int bytelnght = 256, int iterations = 64)
         {
             //MULTITHREADING
             generatedLargePrimes.Clear();
@@ -90,7 +90,7 @@ namespace RSAKeygenLib
             
             for (int i = 0; i < threads; i++)
             {
-                tasks1[i] = Task.Run(() => FindLargePrimes(bytelnght, numOfPrimes, "toList")); // this will ensure, that all primes will be generated
+                tasks1[i] = Task.Run(() => FindLargePrimes(bytelnght, numOfPrimes, "toList", iterations)); // this will ensure, that all primes will be generated
             }
 
             Task.WaitAny(tasks1);
@@ -99,7 +99,7 @@ namespace RSAKeygenLib
         }
 
         private static readonly object lockAllGeneratedPrimes = new();
-        private static void FindLargePrimes(int byteLenght, int amtOfLargePrimes, string outputPath)
+        private static void FindLargePrimes(int byteLenght, int amtOfLargePrimes, string outputPath, int iterations)
         {
             //Console.WriteLine($"Started thread with byteLenght: {byteLenght}, amtOfLargePrimes: {amtOfLargePrimes}, outputPath: {outputPath}");
             BigInteger randomLargeNum;
@@ -117,7 +117,7 @@ namespace RSAKeygenLib
                         if (allGeneratedPrimes >= amtOfLargePrimes)
                             return;
 
-                    } while (!IsPrime(randomLargeNum));
+                    } while (!IsPrime(randomLargeNum, iterations));
                     lock (lockAllGeneratedPrimes)
                     {
                         if (allGeneratedPrimes >= amtOfLargePrimes)
