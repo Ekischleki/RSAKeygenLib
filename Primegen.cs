@@ -31,7 +31,7 @@ namespace RSAKeygenLib
             }
             return true; //Could still be no prime
         }
-        private static bool IsPrime(BigInteger number, int maxIterations)
+        public static bool IsPrime(BigInteger number, int maxIterations)
         {
             //Rabin miller algorithm for evaluating primes
             if (number == 2)
@@ -171,7 +171,7 @@ namespace RSAKeygenLib
 
             return BigInteger.Parse(ConvertArrayToString.ConvertIntArrayToString(randomLenght)); //Perfectly clean lol
         }
-        internal static BigInteger GetRandomByteLenghtBigIntiger(int byteLenght)
+        public static BigInteger GetRandomByteLenghtBigIntiger(int byteLenght)
         {
             byte[] resultBytes = new byte[byteLenght];
             rng.GetBytes(resultBytes);

@@ -12,12 +12,12 @@ namespace RSAKeygenLib
         /// <param name="byteSize">The byte lenght of the initially generated prime numbers. If you're using this Keypair for securety applications, this should be at least 128. A larger byteSize means more computing time.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static PublicPrivateKeypair GenerateRSAKeypair(int byteSize = 256)
+        public static PublicPrivateKeypair GenerateRSAKeypair(int byteSize = 256, int iterations = 64)
         {
             
-            List<BigInteger> primes = GenPrimes.GenLargePrimes(2, Environment.ProcessorCount, byteSize);
+            List<BigInteger> primes = GenPrimes.GenLargePrimes(2, Environment.ProcessorCount, byteSize, iterations);
             PublicPrivateKeypair result = GenerateRSAKeypair(primes[0], primes[1]);
-            if (result.PrivateKey.CryptUsingKeypair(result.PublicKey.CryptUsingKeypair(2)) != 2) throw new Exception("Keypair wasn't generated successfully.");
+            if (result.PrivateKey.CryptUsingKeypair(result.PublicKey.CryptUsingKeypair(15)) != 15) throw new Exception("Keypair wasn't generated successfully.");
             return result;
         }
         /// <summary>
