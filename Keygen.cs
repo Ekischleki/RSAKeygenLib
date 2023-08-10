@@ -1,6 +1,6 @@
 ﻿
 using System.Numerics;
-using DataTypeStoreLib;
+using ObjectStoreE;
 
 namespace RSAKeygenLib
 {
@@ -135,7 +135,7 @@ namespace RSAKeygenLib
         {
             get
             {
-                Region region = new("PublicPrivateKeyPair", new List<Region>(), new());
+                Region region = new("PublicPrivateKeyPair");
                 region.SubRegions.Add(PrivateKey.Save);
                 region.SubRegions.Add(PublicKey.Save);
                 return region;
@@ -185,10 +185,10 @@ namespace RSAKeygenLib
         {
             get
             {
-                Region region = new("KeyPair", new List<Region>(), new());
-                region.directValues.Add(new("keyPairType", keyPairType, false));
-                region.directValues.Add(new("keyPartOne", keyPartOne.ToString(), false));
-                region.directValues.Add(new("keyPartTwo", keyPartTwo.ToString(), false));
+                Region region = new("KeyPair");
+                region.DirectValues.Add(new("keyPairType", keyPairType, false));
+                region.DirectValues.Add(new("keyPartOne", keyPartOne.ToString(), false));
+                region.DirectValues.Add(new("keyPartTwo", keyPartTwo.ToString(), false));
                 return region;
             }
         }
